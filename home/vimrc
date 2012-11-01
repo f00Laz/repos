@@ -1,0 +1,11 @@
+syntax on
+set fileencoding=utf-8
+set fileencodings=iso-2022-jp,euc-jp
+set encoding=utf-8
+
+colorscheme relaxedgreen
+
+set ic number autoindent shiftwidth=4 tabstop=4 terse showmatch ruler
+set incsearch hlsearch wrapscan
+set laststatus=2 cmdheight=1 showcmd title
+set statusline=%<%f\ %m%r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%4v\%l/%L
