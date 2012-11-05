@@ -1,0 +1,38 @@
+ * インストール *
+ brew install weechat --perl --ruby --python
+
+ * 起動 * 
+ weechat-curses
+
+ * サーバの追加 * 
+ /server add hogehoge irc.hogehoge.co.jp/6668 -ssl -password=********
+
+ * 証明書でエラーが出るので無視 * 
+ /set irc.server.paperboy.ssl_verify off 
+
+ * ユーザ設定が必要なら行う * 
+ /set irc.server.paperboy.nicks "simofuji,simo,simomo"
+ /set irc.server.paperboy.username "Simofuji Kousuke"
+
+ * サーバの自動接続 * 
+ /set irc.server.paperboy.autoconnect on
+
+ * 自動入室するチャンネル *
+ /set irc.server.paperboy.autojoin "#test,#test2"
+
+ * Plugin管理 * 
+ weegetをインストールする。（weechat用のプラグインマネージャ)
+ cd ~/.weechat/python/autoload/
+ wget http://www.weechat.org/files/scripts/weeget.py
+
+ weechatから/python autoload
+
+ * buffersを入れる(バッファ一覧) * 
+ /weeget install buffers
+
+ * スクロールのキーバインドを変更する * 
+ weechatから
+ /key bind ctrl-J /window page_up
+ /key bind ctrl-K /winodw page_down
+
+
