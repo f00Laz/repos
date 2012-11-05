@@ -32,7 +32,7 @@
 
  * スクロールのキーバインドを変更する * 
  weechatから
- /key bind ctrl-J /window page_up
- /key bind ctrl-K /winodw page_down
+ /key bind ctrl-K /window page_up
+ /key bind ctrl-J /winodw page_down
 
 
