@@ -1,4 +1,4 @@
- # How to use weechat on mac os x 
+# How to use weechat on mac os x 
 
 公式サイト：http://www.weechat.org/
 
@@ -12,7 +12,7 @@ weechatはCUIのIRCクライアントです。
  - マルチプラットフォーム( Gnu/Linux, *BSD, MacOS X, Windowsなど )
  - 完全なGPL、フリーソフトウェア
 
- ## インストール
+## インストール
 
 perl、ruby、pythonのプラグインを使いたいので以下のようにインストールします。
 
