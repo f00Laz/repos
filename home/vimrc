@@ -1,11 +1,75 @@
 syntax on
-set fileencoding=utf-8
-set fileencodings=iso-2022-jp,euc-jp
-set encoding=utf-8
-
+"カラースキーマ設定
 colorscheme relaxedgreen
+"vi互換モードをオフ(vimの拡張機能を有効)
+set nocompatible
 
-set ic number autoindent shiftwidth=4 tabstop=4 terse showmatch ruler
-set incsearch hlsearch wrapscan
-set laststatus=2 cmdheight=1 showcmd title
+"バッファを保存しなくても他のバッファを表示できるようにする
+set hidden
+"コマンドライン保管を便利に
+set wildmenu
+"タイプ途中のコマンドを画面最下行に表示
+set showcmd
+"検索語を強調表示
+set hlsearch
+"検索時に大文字・小文字を区別しない。
+set ignorecase
+"ただし検索語に大文字、小文字が混在しているときは区別する
+set smartcase
+"オートインデント、開業、インサートモード開始直後にバックスペースキーで削除できるように
+set backspace=indent,eol,start
+"オートインデントを有効にする
+set autoindent
+" 移動コマンドを使ったとき、行頭に移動しない
+set nostartofline
+" 画面最下行にルーラーを表示する
+set ruler
+" ステータスラインを常に表示する
+set laststatus=2
+" ステータスライン
 set statusline=%<%f\ %m%r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%4v\%l/%L
+"バッファが変更されているとき、コマンドをエラーにするのではなく保存する
+set confirm
+"ビープの変わりにヴィジュアルベルを使う
+set visualbell
+"そしてヴィジュアルベルも無効にする
+set t_vb=
+"コマンドラインの高さを1行に
+set cmdheight=1
+"行番号を表示
+set number
+"キーコードはすぐにタイムアウト。マッピングはタイムアウトしない。
+set notimeout ttimeout ttimeoutlen=200
+
+"---
+" vim vundle (Vimのプラグインの管理)
+" :BundleInstall  : .vimrcに記述されたプラグインをインストールする
+" :BundleInstall! : インストール済みのプラグインのアップデート
+" :BundleClean    : .vimrcからプラグインの記述を消したあとなら、アンインストールできる
+" :Bundles        : プラグインの検索
+" :helptags ~/.vim/vundle.git/doc : ヘルプの生成
+" :help vundle    : ヘルプの表示
+" git clone http://github.com/gmarik/vundle.git ~/.vim/vundle.git
+"---
+filetype off
+set rtp+=~/.vim/vundle.git/
+call vundle#rc()
+" ここにプラグインの記述を行う
+Bundle 'neocomplcache'
+":help neocomplcache@jaで日本語のマニュアルがみれる
+Bundle 'ref.vim'
+Bundle 'ctags.vim'
+
+"taglist設定
+Bundle 'taglist.vim'
+"編集中のファイルのみのタグを表示
+"let Tlist_Show_One_File = 1
+"taglistを右側に表示
+"let Tlist_Use_Right_Window = 1
+"taglistのみの時に終了
+let Tlist_Exit_OnlyWindow = 1
+
+"ファイル名と内容によってファイルタイプを判別し、
+"ファイルタイププラグインを有効にする。
+filetype plugin indent on
+
