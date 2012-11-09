@@ -1,0 +1,72 @@
+#ユーザ情報の設定
+set realname="simofuji"
+set from="simofuji@xxx.co.jp"
+#hostnameはメールアドレスのドメイン部だけを記述しましょう。
+#FromフィールドやMessage-IDフィールドがこの情報に基づいて生成されます。
+set hostname="xxx.co.jp"
+
+#SMTPサーバ設定
+set smtp_url="smtp://mail.xxx.co.jp"
+
+#IMAP設定
+set folder="imap://xxx.co.jp-simofuji@mail.xxx.co.jp"
+set spoolfile="+INBOX"
+set mbox="+INBOX"
+set postponed="+INBOX/Draft"
+set record="+INBOX/Sent"
+mailboxes !
+set imap_pass=xxx
+
+#ヘッダとメッセージのキャッシュ
+set header_cache=~/.mutt/cache/headers/
+set message_cachedir=~/.mutt/cache/bodies/
+
+#表示用、作成用の文字コード
+set charset="utf-8"
+#送信字の文字コード
+set send_charset="iso-2022-jp:utf-8"
+
+#日本語でボディの検索を行う設定
+set thorough_search=yes
+
+#添付ファイルが日本語簿場合、MIME B encodingに対応する
+set rfc2047_parameters=yes
+
+#使用するエディタの設定
+set editor="vim"
+
+#キーバインド
+#Gでimapからメールを取得
+bind index G imap-fetch-mail
+bind pager G imap-fetch-mail
+
+#色の設定
+#ノーマル画面
+color normal green default
+
+#ページャの設定
+color hdrdefault cyan default
+color header yellow default ^(From|Subject)
+color quoted cyan default
+color signature red default
+color attachment blue default
+color body magenta default ("ftp|http)://[^ ]+" #URL
+color body magenta default [-a-z_0-9.]+@[-a-z_0-9.]+ #Mail address
+color search black yellow # hilite search patterns in the pager
+
+#インデックス画面
+color index green default .*
+color tree cyan default # the thread tree in the index menu
+color indicator black brightcyan
+
+#シンボル
+color markers blue default
+color tilde blue default
+
+#メニュー、メッセージ
+color status yellow blue
+color message cyan default
+color error brightred default
+
+#参考サイト : http://www.emaillab.org/mutt/1.4/doc/manual_ja.html
+#           : http://www.emaillab.org/mutt/1.5/doc/usage-japanese.ja.html
