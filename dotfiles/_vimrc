@@ -1,4 +1,4 @@
-syntax on
+synta on
 "カラースキーマ設定
 colorscheme relaxedgreen
 "vi互換モードをオフ(vimの拡張機能を有効)
@@ -41,6 +41,33 @@ set number
 "キーコードはすぐにタイムアウト。マッピングはタイムアウトしない。
 set notimeout ttimeout ttimeoutlen=200
 
+"clipboard onでコンパイルしないと意味がない
+"ヴィジュアルモードで選択したテキストをクリップボードに入れる。
+"set clipboard+=a
+"yankしたテキストを無名レジスタだけではく*レジスタに入れる
+"set clipboard=unnamed
+
+"スペースでインデントする
+set expandtab
+" インデント幅を設定する
+set tabstop=4
+set softtabstop=3
+set shiftwidth=3
+
+set fileencoding=utf-8
+set fileencodings=iso-2022-jp,euc-jp,
+set encoding=utf-8
+
+" バックアップ設定
+set backupext=,backup
+set backup
+set backupdir=~/.vim/backup
+set swapfile
+set directory=~/.vim/swap
+
+"タグジャンプのCtrl-]とCtrl-Tをよく使用するが、Ctrl-Tはtmuxにかぶるので変更
+nnoremap <C-[> :pop<CR>
+
 "---
 " vim vundle (Vimのプラグインの管理)
 " :BundleInstall  : .vimrcに記述されたプラグインをインストールする
@@ -58,16 +85,25 @@ call vundle#rc()
 Bundle 'neocomplcache'
 ":help neocomplcache@jaで日本語のマニュアルがみれる
 Bundle 'ref.vim'
-Bundle 'ctags.vim'
+
+"ソースエクスプローラー
+Bundle 'SrcExpl.vim'
+Bundle 'Trinity.vim'
+Bundle 'nerdtree.vim'
+Bundle 'taglist.vim'
 
 "taglist設定
-Bundle 'taglist.vim'
 "編集中のファイルのみのタグを表示
 "let Tlist_Show_One_File = 1
 "taglistを右側に表示
 "let Tlist_Use_Right_Window = 1
 "taglistのみの時に終了
-let Tlist_Exit_OnlyWindow = 1
+"let Tlist_Exit_OnlyWindow = 1
+"使用するctags
+"set tags
+let Tlist_Ctags_Cmd="/usr/local/bin/ctags"
+"let g:tlist_php_settings = 'php;c:class;d:constant;f:function'
+
 
 "ファイル名と内容によってファイルタイプを判別し、
 "ファイルタイププラグインを有効にする。
