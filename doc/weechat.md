@@ -18,6 +18,13 @@ perl、ruby、pythonのプラグインを使いたいので以下のようにイ
 
 	brew install weechat --perl --ruby --python
 
+mac os x snow leopardではbrewではコンパイルに失敗しますので、手動でインストールしました。
+
+   ./configure
+   cmake
+   make 
+   make install
+
 ## weechatの起動
 
 	weechat-curses

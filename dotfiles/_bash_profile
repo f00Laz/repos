@@ -1,15 +1,17 @@
 # Alias Setting
 alias ls='ls -CFG'
 alias diff='colordiff'
+alias ctags='`brew --prefix`/bin/ctags'
+alias vim='`brew --prefix`/bin/vim'
 
 # Smile PROMPT :)
-#export PS1="\`if [ \$? = 0 ]; then echo \[\e[33m\]-_-\[\e[0m\]; else echo \[\e[31m\]O_O\[\e[0m\]; fi\`[\[\e[35;1m\]\u\[\e[0m\]@\[\e[34;1m\]\h\[\e[0m\]:\[\e[30;33m\]\w\e[0m\]]$ \[\e[0m\]"
-export PS1="[\t \u@\h \w]\$ "
+export PS1="\`if [ \$? = 0 ]; then echo -_-; else echo O_O; fi\`[\u@\h:\w]$ "
 
 # Language Setting
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
-# Lessカラー表示
+
+# lessカラー表示
 export LESS="-R"
 
 #パスの設定
@@ -24,5 +26,3 @@ if [ $SHLVL = 1 ];then
 	tmux attach || tmux
 fi
 
-#perlモジュールのlocal::libの設定
-eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)
