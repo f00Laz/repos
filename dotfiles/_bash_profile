@@ -1,6 +1,9 @@
 # Alias Setting
 alias ctags='`brew --prefix`/bin/ctags'
 alias vim='`brew --prefix`/bin/vim'
+alias ls='ls -CFG'
+alias diff='colordiff'
+alias ctags="`brew --prefix`/bin/ctags"
 
 # Smile PROMPT :)
 export PS1="\`if [ \$? = 0 ]; then echo -_-; else echo O_O; fi\`[\u@\h:\w]$ "
