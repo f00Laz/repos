@@ -69,7 +69,7 @@ weechat起動時に自動的に接続したいチャンネルを以下のよう�
 スクロールのキーバインドはデフォルトではPageUP、PageDownなのですが、Mac Bookには該当のキーが見当たらなかったのでCtrl-k、Ctrl-jでスクロールできるようにキーバインドを変更しました。
 
  	/key bind ctrl-K /window page_up
- 	/key bind ctrl-J /winodw page_down
+ 	/key bind ctrl-J /windown page_down
 
 ## プラグイン
 
