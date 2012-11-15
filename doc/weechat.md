@@ -95,3 +95,23 @@ weechatから以下のように入力しインストールします。
 
  	/weeget install buffers
 
+### hilightされた文字列があれば、mac os xの通知センターに通知する。
+
+#### terminal-notiferをインストールする
+
+   $ gem install terminal-notifier
+
+#### pyncをインストールする
+
+   $ brew install python 
+   $ pip intall pync 
+
+#### pyncの動作を確認する
+
+   /weeget install notification_center
+
+#### highlightを設定する
+
+部分一致を設定する
+
+   set weechat.look.highlight "*nick1*,*nick2*,*nick3*"
