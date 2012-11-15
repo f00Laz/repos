@@ -1,13 +1,13 @@
-# PerlBrew$B$N%$%s%9%H!<%k(B
+# PerlBrewのインストール
 
 PerlBrew : http://perlbrew.pl/
 
-## PerlBrew$B$N%$%s%9%H!<%k(B
+## PerlBrewのインストール
 
    export PERLBREW_ROOT=~/local/perlbrew
    curl -kL http://install.perlbrew.pl | bash
 
-## PerlBrew$B$,%$%s%9%H!<%k2DG=$J(BPerl$B$NNs5s(B
+## PerlBrewがインストール可能なPerlの列挙
 
    ~/local/perlbrew/bin/perlbrew available
    perl-5.12.5-RC2
