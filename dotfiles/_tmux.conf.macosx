@@ -118,5 +118,3 @@ set-option -g default-command "/usr/local/bin/reattach-to-user-namespace -l $SHE
 bind-key C-c run "tmux save-buffer - | /usr/local/bin/reattach-to-user-namespace pbcopy"
 bind-key C-v run "/usr/local/bin/reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"
 
-# 参考 : http://d.hatena.ne.jp/kakurasan/20100331/p1
-#      : https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html
