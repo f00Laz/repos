@@ -109,6 +109,7 @@ weechatから以下のように入力しインストールします。
 #### pyncの動作を確認する
 
    /weeget install notification_center
+   /weeget install urlgrab
 
 #### highlightを設定する
 
