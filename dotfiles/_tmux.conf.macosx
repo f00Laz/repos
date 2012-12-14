@@ -15,6 +15,7 @@
 # Ctrl-t DOWN   : ペインを下方向にリサイズ
 # Ctrl-t LEFT   : ペインを左方向にリサイズ
 # Ctrl-t RIGHT  : ペインを右方向にリサイズ
+# Ctrl-t {, }   : ペインを入れ替える
 # Ctrl-t x      : ペインを削除
 # Ctrl-t Ctrl-c : バッファをクリップボードにコピー
 # Ctrl-t Ctrl-v : クリップボードからバッファにコピー
@@ -85,7 +86,11 @@ set-window-option -g window-status-attr default
 # ウィンドウ一覧部におけるアクティブなウィンドウの項目
 set-window-option -g window-status-current-fg white
 set-window-option -g window-status-current-bg colour125
-set-window-option -g window-status-current-attr bold
+set-window-option -g window-status-current-attr bold#, underscore
+
+# アクティブウィンドウをわかりやすくする。
+set -g pane-active-border-fg black
+set -g pane-active-border-bg cyan
 
 # メッセージ/プロンプト
 set-option -g message-fg colour115
@@ -102,7 +107,8 @@ set-option -g status-left "%m/%d %H:%M"
 set-option -g status-left-length 11  # 既定値は10
 
 # 右ステータス(タイトルを表示)
-set-option -g status-right "#T"
+#set-option -g status-right "#T"
+set-option -g status-right "\"#W\"(#I/#P) @ #H"
 #set-option -g status-right-length 99  # 右ステータスも長さ制限可
 
 # ウィンドウマネージャ向けのタイトル
@@ -118,3 +124,5 @@ set-option -g default-command "/usr/local/bin/reattach-to-user-namespace -l $SHE
 bind-key C-c run "tmux save-buffer - | /usr/local/bin/reattach-to-user-namespace pbcopy"
 bind-key C-v run "/usr/local/bin/reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"
 
+# 参考 : http://d.hatena.ne.jp/kakurasan/20100331/p1
+#      : https://bytebucket.org/ns9tks/tmux-ja/wiki/tmux-ja.html

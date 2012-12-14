@@ -3,7 +3,6 @@ synta on
 colorscheme relaxedgreen
 "vi互換モードをオフ(vimの拡張機能を有効)
 set nocompatible
-
 "バッファを保存しなくても他のバッファを表示できるようにする
 set hidden
 "コマンドライン保管を便利に
@@ -43,7 +42,7 @@ set notimeout ttimeout ttimeoutlen=200
 
 "clipboard onでコンパイルしないと意味がない
 "ヴィジュアルモードで選択したテキストをクリップボードに入れる。
-set clipboard+=autoselect
+"set clipboard+=autoselect
 "yankしたテキストを無名レジスタだけではく*レジスタに入れる
 set clipboard=unnamed
 
@@ -54,7 +53,6 @@ set tabstop=4
 set softtabstop=3
 set shiftwidth=3
 
-" 言語設定
 set fileencoding=utf-8
 set fileencodings=iso-2022-jp,euc-jp,
 set encoding=utf-8
@@ -88,11 +86,11 @@ Bundle 'neocomplcache'
 Bundle 'ref.vim'
 
 "ソースエクスプローラー
-"vundleでは入らないかったので手動で~/.vim/pluginのなかに放り込んだ。
-"Bundle 'SrcExpl.vim'
-"Bundle 'Trinity.vim'
-"Bundle 'nerdtree.vim'
+Bundle 'SrcExpl.vim'
+Bundle 'Trinity.vim'
+Bundle 'nerdtree.vim'
 Bundle 'taglist.vim'
+
 "taglist設定
 "編集中のファイルのみのタグを表示
 "let Tlist_Show_One_File = 1
@@ -102,7 +100,10 @@ Bundle 'taglist.vim'
 "let Tlist_Exit_OnlyWindow = 1
 "使用するctags
 "set tags
-let Tlist_Ctags_Cmd="`brew --prefix`/bin/ctags"
+let Tlist_Ctags_Cmd="/usr/local/bin/ctags"
+"let g:tlist_php_settings = 'php;c:class;d:constant;f:function'
+
+Bundle 'fakeclip'
 
 "ファイル名と内容によってファイルタイプを判別し、
 "ファイルタイププラグインを有効にする。

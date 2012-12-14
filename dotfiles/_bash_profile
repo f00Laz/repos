@@ -4,6 +4,7 @@ alias vim='`brew --prefix`/bin/vim'
 alias ls='ls -CFG'
 alias diff='colordiff'
 alias ctags="`brew --prefix`/bin/ctags"
+alias ssh='~/local/bin/ssh_wrapper.sh'
 
 # Smile PROMPT :)
 export PS1="\`if [ \$? = 0 ]; then echo -_-; else echo O_O; fi\`[\u@\h:\w]$ "
@@ -18,12 +19,41 @@ export LESS="-R"
 #パスの設定
 export PATH=/sbin:/usr/sbin:/bin:/usr/local/bin:/usr/bin:/usr/X11/bin:$HOME/local/bin
 
+# EDITORの設定
+export EDITOR=/usr/local/bin/vim
+
+# Xquartzの設定
+export DISPLAY=:0
+
 # tmux Setting
 # 端末起動時にtmuxを起動、すでに起動しているならアタッチする。
 # $SHLVL環境変数でシェルのネストレベルを調べる。
 # tmuxのアタッチが失敗するなら、tmuxを起動する。
 # 参考 : http://filmlang.org/computer/tmux
-if [ $SHLVL = 1 ];then
-	tmux attach || tmux
-fi
+#if [ $SHLVL = 1 ];then
+#	tmux attach || tmux
+#fi
 
+
+#-- w3mでalc検索
+function alc() {
+   if [ $# != 0 ]; then
+      w3m "http://eow.alc.co.jp/$*/UTF-8/?ref=sa" | less +37
+   else
+      w3m "http://www.alc.co.jp/"
+   fi
+}
+
+#-- w3mでgoogle検索
+function google() {
+   local str opt
+   if [ $ != 0 ]; then
+      for i in $*; do
+         str="$str+$i"
+      done
+      str=`echo $str | sed 's/^\+//'`
+      opt='search?num=50&hl=ja&lr=lang_ja'
+      opt="${opt}&q=${str}"
+   fi
+   w3m http://www.google.co.jp/$opt
+}
